@@ -1,0 +1,228 @@
+html{
+    height: 100%;
+}
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column; 
+    background-color:rgb(234, 235, 235);
+}
+header.jumbotron.text-center {
+    background-image: url('../images/bgimg.jpg'); /* Ensure the path is correct */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color:white;
+    height:600px;
+    
+}
+
+header.jumbotron h1 {
+    margin-top: 100px;
+}
+
+.container {
+    width: 80%;  /* Adjust container width as needed */
+    margin: 0 auto;  /* Center the container horizontally */
+    padding: 20px;  /* Add some padding for spacing */
+    flex:1;
+  }
+  
+  .row {
+    border: 1px solid #ddd;
+    background-color:white;
+    display: flex;
+   height: auto;
+    margin-bottom: 100px;  /* Add space between rows */
+    border-radius: 10px;
+  }
+  .row2{
+    border: 1px solid #ddd;
+    background-color:white;
+    display: flex;
+   
+   height: auto;
+    margin-bottom: 100px;  /* Add space between rows */
+    border-radius: 20px;
+  }
+  .column2{
+    flex: 1;  /* Make columns equally sized */
+    padding: 5px;
+    margin-left: 20px;
+    margin-right: 10px;  /* Add space between columns */
+    height: auto;
+    min-width: 10rem;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    cursor: pointer; /* Indicate clickable area */
+   transition: transform 0.1s ease-in-out; /* Smooth transform animation */
+  }
+  .card-img{
+    height: 16rem;
+    border-radius: 10px;
+    width:10rem; 
+    
+  }
+  .column2:hover {
+    transform: translateY(-4px); /* Move up slightly on hover */
+  
+  }
+  
+  .column {
+    flex: 1;  /* Make columns equally sized */
+    padding: 5px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 10px;
+      /* Add space between columns */
+    height: auto;
+    align-items: center;
+    margin-top: 20px;
+    min-width: 15rem;
+    justify-content: center;
+    display: flex; 
+  }
+  
+  .column:last-child {
+    margin-right: 0;  /* Remove margin from the last column */
+  }
+  .card{
+    max-width:15rem;
+   height: 25rem;
+   border-radius: 10px;
+   cursor: pointer; /* Indicate clickable area */
+   transition: transform 0.1s ease-in-out; /* Smooth transform animation */
+  }
+  .card:hover {
+    transform: translateY(-7px); /* Move up slightly on hover */
+  
+  }
+
+  .card-img-top{
+    max-height: 12rem;
+    border-radius: 10px;
+    min-width: 15rem;
+  }
+  .card-body{
+    max-height: 15rem;
+  }
+  .search-form-container{
+    width:100%;
+  }
+  .search-input{
+    width:80%;
+    height: 3rem;
+    border-radius: 20px;
+  }
+  .btn.btn-secondary{
+    border-radius: 20px;
+    background-color: blue;
+  }
+  .popular-destinations {
+    margin: 20px 0px; /* Add some margin above and below the section */
+    text-align: center; /* Center the heading */
+    background-color: white;
+    border-radius: 10px;
+    height: auto;
+    background-image: url('../images/offerimg4.jpg'); /* Ensure the path is correct */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width:auto;
+  }
+  
+  .destination-container {
+    display: flex;
+    justify-content: space-around; /* Distribute cards evenly */
+    flex-wrap: wrap; /* Allow cards to wrap to multiple lines if needed */
+    margin-bottom: 150px;
+    height:auto;
+   margin-top: 50px;
+  }
+  
+  .offer-card {
+    display: flex; /* Make the card a flex container */
+    width:40rem;/* Adjust width as needed */
+    margin: 20px auto; /* Center the card horizontally */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: white;
+     margin-right: 10px;
+     margin-left:10px;
+     cursor: pointer; /* Indicate clickable area */
+    transition: transform 0.1s ease-in-out; /* Smooth transform animation */
+  }
+  .offer-card:hover {
+    transform: translateY(-3px); /* Move up slightly on hover */
+  
+  }
+  
+  .offer-image {
+    width:20rem; /* Adjust image width as needed */
+    height: auto; /* Adjust image height as needed */
+    object-fit: cover; /* Ensure image fills the space */
+    border-radius: 10px;
+  }
+  
+  .offer-details {
+    width: 20rem; /* Make text content take up remaining space */
+    padding: 15px;
+  }
+  
+  .offer-details h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .offer-details p {
+    font-size: 0.9em;
+    margin-bottom: 15px;
+  }
+  
+  .btn-primary {
+    /* Style your primary button here (color, background, etc.) */
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .imgbutton {
+    /* Remove default button styles (optional) */
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    /* Style the button appearance using the image */
+    cursor: pointer;  /* Indicate clickable area */
+    outline: none;
+    border-radius: 10px;
+  }
+  
+  .image-button:hover {
+    /* Optional hover effect for the button */
+    opacity: 0.8;
+  }
+  footer.text-center.mt-5{
+    background:white;
+   text-align: center;
+   max-height: 25rem;
+   min-height: 15px;
+   text-align: center; 
+}
+
+
+footer.text-center.mt-5 a {
+    margin: 0 10px;
+    color:#007bff;
+    font-size: 24px;
+    text-decoration: none;
+}
+footer.text-center.mt-5 a:hover {
+    color: #007bff;
+}
+
+  
