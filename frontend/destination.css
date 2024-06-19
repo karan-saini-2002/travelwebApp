@@ -37,20 +37,26 @@ header.jumbotron h1 {
     margin-bottom: 100px;  /* Add space between rows */
     border-radius: 10px;
   }
+  .cont{
+    height: 400px;
+    background-color:white;
+    border-radius: 20px;
+    margin-bottom: 100px;
+  }
   .row2{
-    border: 1px solid #ddd;
+   
     background-color:white;
     display: flex;
    
-   height: auto;
+   height: 360px;
     margin-bottom: 100px;  /* Add space between rows */
     border-radius: 20px;
   }
   .column2{
     flex: 1;  /* Make columns equally sized */
     padding: 5px;
-    margin-left: 20px;
-    margin-right: 10px;  /* Add space between columns */
+    margin-left: 1px;
+    margin-right: 1px;  /* Add space between columns */
     height: auto;
     min-width: 10rem;
     align-items: center;
@@ -63,7 +69,6 @@ header.jumbotron h1 {
     height: 16rem;
     border-radius: 10px;
     width:10rem; 
-    
   }
   .column2:hover {
     transform: translateY(-4px); /* Move up slightly on hover */
@@ -101,12 +106,13 @@ header.jumbotron h1 {
   }
 
   .card-img-top{
-    max-height: 12rem;
+    min-height: 12rem;
     border-radius: 10px;
-    min-width: 15rem;
+    min-width: 10rem;
   }
   .card-body{
     max-height: 15rem;
+    
   }
   .search-form-container{
     width:100%;
@@ -144,7 +150,7 @@ header.jumbotron h1 {
   
   .offer-card {
     display: flex; /* Make the card a flex container */
-    width:40rem;/* Adjust width as needed */
+    width:30rem;/* Adjust width as needed */
     margin: 20px auto; /* Center the card horizontally */
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -160,7 +166,7 @@ header.jumbotron h1 {
   }
   
   .offer-image {
-    width:20rem; /* Adjust image width as needed */
+    width:10rem; /* Adjust image width as needed */
     height: auto; /* Adjust image height as needed */
     object-fit: cover; /* Ensure image fills the space */
     border-radius: 10px;

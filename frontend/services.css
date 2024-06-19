@@ -54,13 +54,23 @@ body {
   
 
 
-
-footer.text-center.mt-5{
+  footer.text-center.mt-5{
     background:white;
-   margin-top: auto;
    text-align: center;
-   padding-top: 10px;;
+   max-height: 25rem;
+   min-height: 15px;
+   text-align: center; 
 }
-.footer.text-center.mt-5.p{
-       margin-bottom: 0%;
+
+
+footer.text-center.mt-5 a {
+    margin: 0 10px;
+    color:#007bff;
+    font-size: 24px;
+    text-decoration: none;
 }
+footer.text-center.mt-5 a:hover {
+    color: #007bff;
+}
+
+  

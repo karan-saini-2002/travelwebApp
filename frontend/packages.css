@@ -29,7 +29,7 @@ body {
 }
 .btn {
   margin-right: 10px;
-  background-color: #9fcae9;
+  background-color: #7dbeed;
   color: azure;
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
@@ -65,6 +65,10 @@ body {
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 10px;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide the overflow text */
+  text-overflow: ellipsis; /* Add ellipsis at the end of the text */
+  width: 100%; /* Adjust the width as needed */
 }
 
 .card-text {
