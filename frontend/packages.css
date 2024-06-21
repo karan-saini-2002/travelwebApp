@@ -19,6 +19,7 @@ body {
   margin: 0 auto;  /* Center the container horizontally */
   padding: 20px;  /* Add some padding for spacing */
   flex:1;
+  
 }
 .d-flex {
   display: flex;
@@ -74,7 +75,11 @@ body {
 .card-text {
   font-size: 0.9rem;
   color: #555;
+  white-space: nowrap;     /* Prevents text from wrapping */
+  overflow: hidden;        /* Hides any content that overflows the container */
+  text-overflow: ellipsis; /* Displays an ellipsis (...) to indicate truncated text */
 }
+
 
 .card-text strong {
   color: #333;

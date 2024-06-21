@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Package Details</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    /* CSS for Image Gallery */
+#imageGallery {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -5px; /* Adjust for Bootstrap column padding */
+  }
+  
+  .gallery-column {
+    padding: 5px; /* Adjust for Bootstrap column padding */
+  }
+  
+  .gallery-column img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    transition: transform 0.2s ease-in-out; /* Add a smooth hover effect */
+  }
+  
+  .gallery-column img:hover {
+    transform: scale(1.05); /* Scale up the image slightly on hover */
+  }
+  
+  @media (max-width: 768px) {
+    .gallery-column {
+      flex: 0 0 50%; /* Two columns on smaller screens */
+      max-width: 50%;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .gallery-column {
+      flex: 0 0 100%; /* Single column on mobile */
+      max-width: 100%;
+    }
+  }
+  
+    .icon {
+      margin-right: 10px;
+    }
+    .day-header {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .card-header {
+      font-size: 1.25em;
+      font-weight: bold;
+    }
+    .itinerary-item {
+      margin-bottom: 15px;
+    }
+    .policy-buttons {
+      display: flex;
+      
+      margin-bottom: 10px;
+    }
+    .policy-button {
+      cursor: pointer;
+      padding: 10px;
+    font-size: x-large;
+      border-radius: 5px;
+      margin-right: 100px;
+      position: relative;
+      background-color: white;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .policy-button:last-child {
+      margin-right: 0;
+    }
+    .policy-button.active {
+      color: blue;
+      border-color: blue;
+    }
+    .policy-button.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: blue;
+    }
+    .hidden {
+      display: none;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <!-- Package Name Section -->
+    <section class="package-name-section mb-4">
+      <h2 id="packageName">Package Name</h2>
+    </section>
+
+    <!-- Gallery Section -->
+<section class="gallery-section mb-4">
+    
+    <div class="row" id="imageGallery">
+      <!-- Images will be dynamically added here -->
+    </div>
+  </section>
+  
+
+    <!-- Policies Section -->
+    <section class="policies-section mb-4">
+      <h2>Policies</h2>
+      <ul id="policiesList">
+        <!-- Policies will be dynamically added here -->
+      </ul>
+    </section>
+
+    <!-- Buttons Section -->
+    <section class="buttons-section mb-4">
+      <!-- Buttons for Itinerary, Flight, and Hotel -->
+      <div class="policy-buttons">
+        <div class="policy-button active" onclick="toggleSection('itinerary', this)">Itinerary</div>
+        <div class="policy-button" onclick="toggleSection('flightDetails', this)">Flight</div>
+        <div class="policy-button" onclick="toggleSection('hotelDetails', this)">Hotel</div>
+      </div>
+    </section>
+
+    <!-- Itinerary Section -->
+    <section class="itinerary-section mb-4" id="itinerary">
+      <h2>Itinerary</h2>
+      <div id="itineraryContent">
+        <!-- Itinerary items will be dynamically added here -->
+      </div>
+    </section>
+
+    <!-- Flight Details Section -->
+    <section class="flight-details-section mb-4 hidden" id="flightDetails">
+      <h2>Flight Details</h2>
+      <div id="flightDetailsContent">
+        <!-- Flight details will be dynamically added here -->
+      </div>
+    </section>
+
+    <!-- Hotel Details Section -->
+    <section class="hotel-details-section mb-4 hidden" id="hotelDetails">
+      <h2>Hotel Details</h2>
+      <div id="hotelDetailsContent">
+        <!-- Hotel details will be dynamically added here -->
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center mt-5">
+      <a href="destinations.html" class="btn btn-primary">Back to Packages</a>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const packageId = urlParams.get('id');
+
+      if (packageId) {
+        fetch(`http://localhost:5000/api/package/${packageId}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(packageData => {
+            // Update page content with package details
+            document.title = `${packageData.name} - Package Details`;
+            document.getElementById('packageName').textContent = packageData.name;
+            populateGallery(packageData.imgUrls);
+            populatePolicies(packageData.policies);
+            populateItinerary(packageData.itinerary);
+            populateHotelDetails(packageData.hotels);
+            populateFlightDetails(packageData.flights);
+          })
+          .catch(error => {
+            console.error('Error fetching package details:', error);
+            displayError();
+          });
+      } else {
+        console.error('Package ID not found in URL');
+        displayError();
+      }
+    });
+
+    function populateGallery(imageUrls) {
+  const gallery = document.getElementById('imageGallery');
+  gallery.innerHTML = ''; // Clear existing content
+
+  const totalImages = imageUrls.length;
+  const numColumns = 4;
+  const columnPatterns = [
+    { images: 1, combined: true },
+    { images: 3, combined: false },
+    { images: 2, combined: false },
+    { images: totalImages - 6, combined: true }
+  ]; // Define how many images each column has and if they are combined
+
+  let currentIndex = 0;
+
+  columnPatterns.forEach(pattern => {
+    const colDiv = document.createElement('div');
+    colDiv.className = `col-md-${12 / numColumns} gallery-column`;
+    colDiv.style.padding = '0 5px'; // Adjust padding for spacing between images
+
+    if (pattern.combined) {
+      // Single image spanning entire column height
+      if (currentIndex < totalImages) {
+        const img = document.createElement('img');
+        img.src = imageUrls[currentIndex];
+        img.alt = 'Package Image';
+        img.className = 'img-thumbnail mb-2'; // Add some styling to the images
+        img.style.width = '100%'; // Ensure image fills the column width
+        img.style.height = '100%'; // Ensure image fills the column height
+        colDiv.appendChild(img);
+        currentIndex++;
+      }
+    } else {
+      // Multiple images sharing column height
+      for (let j = 0; j < pattern.images; j++) {
+        if (currentIndex < totalImages) {
+          const img = document.createElement('img');
+          img.src = imageUrls[currentIndex];
+          img.alt = 'Package Image';
+          img.className = 'img-thumbnail mb-2'; // Add some styling to the images
+          img.style.width = '100%'; // Ensure image fills the column width
+          img.style.height = `${100 / pattern.images}%`; // Adjust image height based on number of images in column
+          colDiv.appendChild(img);
+          currentIndex++;
+        }
+      }
+    }
+
+    gallery.appendChild(colDiv);
+  });
+}
+
+      
+      function populatePolicies(policies) {
+        const policiesList = document.getElementById('policiesList');
+        policiesList.innerHTML = ''; // Clear existing content
+        policies.forEach(policy => {
+          const policyItem = document.createElement('li');
+          policyItem.innerHTML = `<strong>${policy.title}:</strong> ${policy.description}`;
+          policiesList.appendChild(policyItem);
+        });
+      }
+  
+      
+
+    function populatePolicies(policies) {
+      const policiesList = document.getElementById('policiesList');
+      policiesList.innerHTML = ''; // Clear existing content
+      policies.forEach(policy => {
+        const policyItem = document.createElement('li');
+        policyItem.innerHTML = `<strong>${policy.title}:</strong> ${policy.description}`;
+        policiesList.appendChild(policyItem);
+      });
+    }
+
+    function populateItinerary(itinerary) {
+        const itineraryContent = document.getElementById('itineraryContent');
+        itineraryContent.innerHTML = ''; // Clear existing content
+        
+        itinerary.forEach(day => {
+          const itineraryItem = document.createElement('div');
+          itineraryItem.className = 'itinerary-item';
+          itineraryItem.innerHTML = `
+            <h3 class="day-header">Day ${day.day} - ${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' })}</h3>
+            <p><i class="fas fa-hotel icon"></i> Check in to ${day.hotel}, ${day.hotelStars} Star</p>
+            <p><i class="fas fa-car icon"></i> ${day.car}</p>
+            <p><i class="fas fa-map-marker-alt icon"></i> ${day.sightseeing}</p>
+            <p><i class="fas fa-hotel icon"></i> Checkout from ${day.hotel}</p>
+          `;
+          itineraryContent.appendChild(itineraryItem);
+        });
+      }
+      
+
+    function populateHotelDetails(hotel) {
+      const hotelDetailsContent = document.getElementById('hotelDetailsContent');
+      hotelDetailsContent.innerHTML = ''; // Clear existing content
+      hotelDetailsContent.innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-hotel icon"></i>${hotel.name}
+          </div>
+          <div class="card-body">
+            <p class="card-text"><strong>Address:</strong> ${hotel.address}</p>
+            <p class="card-text"><strong>Check-in:</strong> ${new Date(hotel.checkIn).toLocaleDateString()} ${new Date(hotel.checkIn).toLocaleTimeString()}</p>
+            <p class="card-text"><strong>Check-out:</strong> ${new Date(hotel.checkOut).toLocaleDateString()} ${new Date(hotel.checkOut).toLocaleTimeString()}</p>
+            <p class="card-text"><strong>Booking Details:</strong> ${hotel.bookingDetails}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function populateFlightDetails(flights) {
+      const flightDetailsContent = document.getElementById('flightDetailsContent');
+      flightDetailsContent.innerHTML = ''; // Clear existing content
+      flightDetailsContent.innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-plane-departure icon"></i>${flights.details}
+          </div>
+          <div class="card-body">
+            <p class="card-text"><strong>Flight Number:</strong> ${flights.flightNumber}</p>
+            <p class="card-text"><strong>Departure Date:</strong> ${new Date(flights.departureDate).toLocaleDateString()} ${new Date(flights.departureDate).toLocaleTimeString()}</p>
+            <p class="card-text"><strong>Return Date:</strong> ${new Date(flights.returnDate).toLocaleDateString()} ${new Date(flights.returnDate).toLocaleTimeString()}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleSection(sectionId, button) {
+      // Hide all sections
+      document.querySelectorAll('.itinerary-section, .flight-details-section, .hotel-details-section').forEach(section => {
+        section.classList.add('hidden');
+      });
+
+      // Remove active class from all buttons
+      const buttons = document.querySelectorAll('.policy-button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      // Show the selected section and mark the button as active
+      document.getElementById(sectionId).classList.remove('hidden');
+      button.classList.add('active');
+    }
+
+    function displayError() {
+      const container = document.querySelector('.container');
+      container.innerHTML = '<h2>Error Fetching Package Details</h2>';
+    }
+  </script>
+</body>
+</html>

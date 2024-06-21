@@ -62,46 +62,56 @@
         document.getElementById('destinationName').innerText = `${destination.charAt(0).toUpperCase() + destination.slice(1)} Packages`;
         
         fetch(`http://localhost:5000/api/packages/${destination}`)
-          .then(response => response.json())
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            return response.json();
+          })
           .then(data => {
+            console.log('Fetched data:', data); // Log the fetched data
+
             const packagesContainer = document.getElementById('packagesContainer');
             packagesContainer.innerHTML = ''; // Clear previous content
 
-            data.forEach(pkg => {
-              const packageCard = document.createElement('div');
-              packageCard.className = 'col-md-4 mb-4';
-              packageCard.innerHTML = `
-                <div class="card">
-                  <img src="${pkg.img}" class="card-img-top" alt="${pkg.name}">
-                  <div class="card-body">
-                    <h5 class="card-title">${pkg.name}</h5>
-                    <p class="card-text">
-                      <strong>Duration:</strong> ${pkg.duration}<br>
-                      <strong>Flights:</strong> ${pkg.flights}<br>
-                      <strong>Hotels:</strong> ${pkg.hotels}<br>
-                      <strong>Transfers:</strong> ${pkg.transfers}<br>
-                      <strong>Activities:</strong> ${pkg.activities}<br>
-                      <strong>Meals:</strong> ${pkg.meals}<br>
-                      <strong>Price:</strong> ${pkg.price}
-                    </p>
+            if (Array.isArray(data) && data.length > 0) {
+              data.forEach(pkg => {
+                const packageCard = document.createElement('div');
+                packageCard.className = 'col-md-4 mb-4';
+                packageCard.innerHTML = `
+                  <div class="card">
+                    <img src="${pkg.img}" class="card-img-top" alt="${pkg.name}">
+                    <div class="card-body">
+                      <h5 class="card-title">${pkg.name}</h5>
+                      <p class="card-text">
+                        <strong>Duration:</strong> ${pkg.duration}<br>
+                        <strong>Flights:</strong> ${pkg.flights ? pkg.flights.details : 'N/A'}<br>
+                        <strong>Hotels:</strong> ${pkg.hotels ? pkg.hotels.details : 'N/A'}<br>
+                        <strong>Transfers:</strong> ${pkg.transfers}<br>
+                        <strong>Activities:</strong> ${pkg.activities}<br>
+                        <strong>Meals:</strong> ${pkg.meals}<br>
+                        <strong>Price:</strong> ${pkg.price}
+                      </p>
                       <div class="d-flex justify-content-between">
-                  <a href="#" class="btn">View</a>
-                  <a href="#" class="btn">Book</a>
-                </div>
+                        <a href="details.html?id=${pkg._id}" class="btn">View</a>
+                        <a href="#" class="btn">Book</a>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              `;
-              packagesContainer.appendChild(packageCard);
-            });
+                `;
+                packagesContainer.appendChild(packageCard);
+              });
+            } else {
+              packagesContainer.innerHTML = '<p>No packages available for this destination.</p>';
+            }
           })
           .catch(error => {
             console.error('Error fetching packages:', error);
-            // Optionally display an error message to the user
+            const packagesContainer = document.getElementById('packagesContainer');
             packagesContainer.innerHTML = '<p>Error fetching packages. Please try again later.</p>';
           });
       } else {
         console.error('Destination parameter not found');
-        // Optionally display an error message to the user
         document.getElementById('destinationName').innerText = 'Destination Not Specified';
       }
     });
