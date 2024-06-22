@@ -1,0 +1,11 @@
+{
+  "name": "my-frontend-project",
+  "version": "1.0.0",
+  "description": "A simple frontend project",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -o -c-1"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}
