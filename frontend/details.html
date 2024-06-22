@@ -9,6 +9,11 @@
   
   <style>
     /* CSS for Image Gallery */
+    body{
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      font-weight:lighter;
+     
+    }
 #imageGallery {
     display: flex;
     flex-wrap: wrap;
@@ -124,11 +129,12 @@
 
     <!-- Buttons Section -->
     <section class="buttons-section mb-4">
-      <!-- Buttons for Itinerary, Flight, and Hotel -->
+      <!-- Buttons for Itinerary, Flight, Hotel, and Activity -->
       <div class="policy-buttons">
         <div class="policy-button active" onclick="toggleSection('itinerary', this)">Itinerary</div>
         <div class="policy-button" onclick="toggleSection('flightDetails', this)">Flight</div>
         <div class="policy-button" onclick="toggleSection('hotelDetails', this)">Hotel</div>
+        <div class="policy-button" onclick="toggleSection('activityDetails', this)">Activity</div>
       </div>
     </section>
 
@@ -153,6 +159,14 @@
       <h2>Hotel Details</h2>
       <div id="hotelDetailsContent">
         <!-- Hotel details will be dynamically added here -->
+      </div>
+    </section>
+
+    <!-- Activity Details Section -->
+    <section class="activity-details-section mb-4 hidden" id="activityDetails">
+      <h2>Activity Details</h2>
+      <div id="activityDetailsContent">
+        <!-- Activity details will be dynamically added here -->
       </div>
     </section>
 
@@ -184,6 +198,7 @@
             populateItinerary(packageData.itinerary);
             populateHotelDetails(packageData.hotels);
             populateFlightDetails(packageData.flights);
+            populateActivityDetails(packageData.activities);
           })
           .catch(error => {
             console.error('Error fetching package details:', error);
@@ -322,6 +337,28 @@
           </div>
         </div>
       `;
+    }
+
+    function populateActivityDetails(activities) {
+      const activityDetailsContent = document.getElementById('activityDetailsContent');
+      activityDetailsContent.innerHTML = ''; // Clear existing content
+      activities.forEach(activity => {
+        const activityItem = document.createElement('div');
+        activityItem.className = 'activity-item';
+        activityItem.innerHTML = `
+          <div class="row">
+            <div class="col-md-3">
+              <img src="${activity.img}" class="img-thumbnail" alt="${activity.name}">
+            </div>
+            <div class="col-md-9">
+              <h3 class="activity-header">${activity.name}</h3>
+              <p>${activity.description}</p>
+            </div>
+          </div>
+          <hr>
+        `;
+        activityDetailsContent.appendChild(activityItem);
+      });
     }
 
     function toggleSection(sectionId, button) {

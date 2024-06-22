@@ -88,7 +88,7 @@
                         <strong>Flights:</strong> ${pkg.flights ? pkg.flights.details : 'N/A'}<br>
                         <strong>Hotels:</strong> ${pkg.hotels ? pkg.hotels.details : 'N/A'}<br>
                         <strong>Transfers:</strong> ${pkg.transfers}<br>
-                        <strong>Activities:</strong> ${pkg.activities}<br>
+                        <strong>Activities:</strong>  ${pkg.activities.map(activity => `${activity.name},`).join('')}<br>
                         <strong>Meals:</strong> ${pkg.meals}<br>
                         <strong>Price:</strong> ${pkg.price}
                       </p>

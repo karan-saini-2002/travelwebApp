@@ -50,6 +50,12 @@ const itineraryDaySchema = new mongoose.Schema({
   car: String,
   sightseeing: String
 });
+// Activity Schema
+const activitySchema = new mongoose.Schema({
+  name: String,
+  img: String,
+  description: String
+});
 
 const packageSchema = new mongoose.Schema({
   destination: String,
@@ -58,7 +64,7 @@ const packageSchema = new mongoose.Schema({
   flights: flightSchema,
   hotels: hotelSchema,
   transfers: String,
-  activities: [String],
+  activities: [activitySchema],
   meals: String,
   price: String,
   img: String,

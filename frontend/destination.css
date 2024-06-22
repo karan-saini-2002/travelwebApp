@@ -9,7 +9,8 @@ body {
     background-color:rgb(234, 235, 235);
 }
 header.jumbotron.text-center {
-    background-image: url('../images/bgimg.jpg'); /* Ensure the path is correct */
+  background-image:  url('../images/backimg1111.jpg');
+    border-radius: 0%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -18,9 +19,6 @@ header.jumbotron.text-center {
     
 }
 
-header.jumbotron h1 {
-    margin-top: 100px;
-}
 
 .container {
     width: 80%;  /* Adjust container width as needed */
