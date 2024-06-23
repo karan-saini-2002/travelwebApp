@@ -8,86 +8,92 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
   <style>
-    /* CSS for Image Gallery */
-    body{
+    body {
       font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-      font-weight:lighter;
-     
+      font-weight: lighter;
     }
-#imageGallery {
-    display: flex;
-    flex-wrap: wrap;
-    margin: -5px; /* Adjust for Bootstrap column padding */
-  }
-  
-  .gallery-column {
-    padding: 5px; /* Adjust for Bootstrap column padding */
-  }
-  
-  .gallery-column img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-    transition: transform 0.2s ease-in-out; /* Add a smooth hover effect */
-  }
-  
-  .gallery-column img:hover {
-    transform: scale(1.05); /* Scale up the image slightly on hover */
-  }
-  
-  @media (max-width: 768px) {
+
+    /* CSS for Image Gallery */
+    #imageGallery {
+      display: flex;
+      flex-wrap: wrap;
+      margin: -5px; /* Adjust for Bootstrap column padding */
+    }
+
     .gallery-column {
-      flex: 0 0 50%; /* Two columns on smaller screens */
-      max-width: 50%;
+      padding: 5px; /* Adjust for Bootstrap column padding */
     }
-  }
-  
-  @media (max-width: 576px) {
-    .gallery-column {
-      flex: 0 0 100%; /* Single column on mobile */
-      max-width: 100%;
+
+    .gallery-column img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      transition: transform 0.2s ease-in-out; /* Add a smooth hover effect */
     }
-  }
-  
+
+    .gallery-column img:hover {
+      transform: scale(1.05); /* Scale up the image slightly on hover */
+    }
+
+    @media (max-width: 768px) {
+      .gallery-column {
+        flex: 0 0 50%; /* Two columns on smaller screens */
+        max-width: 50%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .gallery-column {
+        flex: 0 0 100%; /* Single column on mobile */
+        max-width: 100%;
+      }
+    }
+
     .icon {
       margin-right: 10px;
     }
+
     .day-header {
       margin-top: 20px;
       margin-bottom: 10px;
       font-size: 1.5em;
       font-weight: bold;
     }
+
     .card-header {
       font-size: 1.25em;
       font-weight: bold;
     }
+
     .itinerary-item {
       margin-bottom: 15px;
     }
+
     .policy-buttons {
       display: flex;
-      
+      flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+      gap: 10px;
       margin-bottom: 10px;
     }
+
     .policy-button {
+      
       cursor: pointer;
-      padding: 10px;
-    font-size: x-large;
+      padding: 10px 20px;
+      font-size: large;
       border-radius: 5px;
-      margin-right: 100px;
-      position: relative;
       background-color: white;
       transition: color 0.3s, border-color 0.3s;
+      flex: 1 1 auto; /* Flex-grow and flex-shrink with auto basis */
+      text-align: center; /* Center text within buttons */
     }
-    .policy-button:last-child {
-      margin-right: 0;
-    }
+
     .policy-button.active {
       color: blue;
       border-color: blue;
     }
+
     .policy-button.active::after {
       content: '';
       position: absolute;
@@ -95,12 +101,26 @@
       left: 0;
       right: 0;
       height: 3px;
-      background-color: blue;
+      
     }
+
     .hidden {
       display: none;
     }
-    
+
+    @media (max-width: 768px) {
+      .policy-button {
+        font-size: medium; /* Adjust font size for medium screens */
+        padding: 8px 16px; /* Adjust padding for medium screens */
+      }
+    }
+
+    @media (max-width: 576px) {
+      .policy-button {
+        font-size: small; /* Adjust font size for small screens */
+        padding: 6px 12px; /* Adjust padding for small screens */
+      }
+    }
   </style>
 </head>
 <body>
@@ -111,13 +131,11 @@
     </section>
 
     <!-- Gallery Section -->
-<section class="gallery-section mb-4">
-    
-    <div class="row" id="imageGallery">
-      <!-- Images will be dynamically added here -->
-    </div>
-  </section>
-  
+    <section class="gallery-section mb-4">
+      <div class="row" id="imageGallery">
+        <!-- Images will be dynamically added here -->
+      </div>
+    </section>
 
     <!-- Policies Section -->
     <section class="policies-section mb-4">
@@ -182,7 +200,7 @@
       const packageId = urlParams.get('id');
 
       if (packageId) {
-        fetch(`http://localhost:5000/api/package/${packageId}`)
+        fetch(`https://travelbackend-01hj.onrender.com/api/package/${packageId}`)
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok');
@@ -211,69 +229,56 @@
     });
 
     function populateGallery(imageUrls) {
-  const gallery = document.getElementById('imageGallery');
-  gallery.innerHTML = ''; // Clear existing content
+      const gallery = document.getElementById('imageGallery');
+      gallery.innerHTML = ''; // Clear existing content
 
-  const totalImages = imageUrls.length;
-  const numColumns = 4;
-  const columnPatterns = [
-    { images: 1, combined: true },
-    { images: 3, combined: false },
-    { images: 2, combined: false },
-    { images: totalImages - 6, combined: true }
-  ]; // Define how many images each column has and if they are combined
+      const totalImages = imageUrls.length;
+      const numColumns = 4;
+      const columnPatterns = [
+        { images: 1, combined: true },
+        { images: 3, combined: false },
+        { images: 2, combined: false },
+        { images: totalImages - 6, combined: true }
+      ]; // Define how many images each column has and if they are combined
 
-  let currentIndex = 0;
+      let currentIndex = 0;
 
-  columnPatterns.forEach(pattern => {
-    const colDiv = document.createElement('div');
-    colDiv.className = `col-md-${12 / numColumns} gallery-column`;
-    colDiv.style.padding = '0 5px'; // Adjust padding for spacing between images
+      columnPatterns.forEach(pattern => {
+        const colDiv = document.createElement('div');
+        colDiv.className = `col-md-${12 / numColumns} gallery-column`;
+        colDiv.style.padding = '0 5px'; // Adjust padding for spacing between images
 
-    if (pattern.combined) {
-      // Single image spanning entire column height
-      if (currentIndex < totalImages) {
-        const img = document.createElement('img');
-        img.src = imageUrls[currentIndex];
-        img.alt = 'Package Image';
-        img.className = 'img-thumbnail mb-2'; // Add some styling to the images
-        img.style.width = '100%'; // Ensure image fills the column width
-        img.style.height = '100%'; // Ensure image fills the column height
-        colDiv.appendChild(img);
-        currentIndex++;
-      }
-    } else {
-      // Multiple images sharing column height
-      for (let j = 0; j < pattern.images; j++) {
-        if (currentIndex < totalImages) {
-          const img = document.createElement('img');
-          img.src = imageUrls[currentIndex];
-          img.alt = 'Package Image';
-          img.className = 'img-thumbnail mb-2'; // Add some styling to the images
-          img.style.width = '100%'; // Ensure image fills the column width
-          img.style.height = `${100 / pattern.images}%`; // Adjust image height based on number of images in column
-          colDiv.appendChild(img);
-          currentIndex++;
+        if (pattern.combined) {
+          // Single image spanning entire column height
+          if (currentIndex < totalImages) {
+            const img = document.createElement('img');
+            img.src = imageUrls[currentIndex];
+            img.alt = 'Package Image';
+            img.className = 'img-thumbnail mb-2'; // Add some styling to the images
+            img.style.width = '100%'; // Ensure image fills the column width
+            img.style.height = '100%'; // Ensure image fills the column height
+            colDiv.appendChild(img);
+            currentIndex++;
+          }
+        } else {
+          // Multiple images sharing column height
+          for (let j = 0; j < pattern.images; j++) {
+            if (currentIndex < totalImages) {
+              const img = document.createElement('img');
+              img.src = imageUrls[currentIndex];
+              img.alt = 'Package Image';
+              img.className = 'img-thumbnail mb-2'; // Add some styling to the images
+              img.style.width = '100%'; // Ensure image fills the column width
+              img.style.height = `${100 / pattern.images}%`; // Adjust image height based on number of images in column
+              colDiv.appendChild(img);
+              currentIndex++;
+            }
+          }
         }
-      }
+
+        gallery.appendChild(colDiv);
+      });
     }
-
-    gallery.appendChild(colDiv);
-  });
-}
-
-      
-      function populatePolicies(policies) {
-        const policiesList = document.getElementById('policiesList');
-        policiesList.innerHTML = ''; // Clear existing content
-        policies.forEach(policy => {
-          const policyItem = document.createElement('li');
-          policyItem.innerHTML = `<strong>${policy.title}:</strong> ${policy.description}`;
-          policiesList.appendChild(policyItem);
-        });
-      }
-  
-      
 
     function populatePolicies(policies) {
       const policiesList = document.getElementById('policiesList');
@@ -286,23 +291,22 @@
     }
 
     function populateItinerary(itinerary) {
-        const itineraryContent = document.getElementById('itineraryContent');
-        itineraryContent.innerHTML = ''; // Clear existing content
-        
-        itinerary.forEach(day => {
-          const itineraryItem = document.createElement('div');
-          itineraryItem.className = 'itinerary-item';
-          itineraryItem.innerHTML = `
-            <h3 class="day-header">Day ${day.day} - ${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' })}</h3>
-            <p><i class="fas fa-hotel icon"></i> Check in to ${day.hotel}, ${day.hotelStars} Star</p>
-            <p><i class="fas fa-car icon"></i> ${day.car}</p>
-            <p><i class="fas fa-map-marker-alt icon"></i> ${day.sightseeing}</p>
-            <p><i class="fas fa-hotel icon"></i> Checkout from ${day.hotel}</p>
-          `;
-          itineraryContent.appendChild(itineraryItem);
-        });
-      }
-      
+      const itineraryContent = document.getElementById('itineraryContent');
+      itineraryContent.innerHTML = ''; // Clear existing content
+
+      itinerary.forEach(day => {
+        const itineraryItem = document.createElement('div');
+        itineraryItem.className = 'itinerary-item';
+        itineraryItem.innerHTML = `
+          <h3 class="day-header">Day ${day.day} - ${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' })}</h3>
+          <p><i class="fas fa-hotel icon"></i> Check in to ${day.hotel}, ${day.hotelStars} Star</p>
+          <p><i class="fas fa-car icon"></i> ${day.car}</p>
+          <p><i class="fas fa-map-marker-alt icon"></i> ${day.sightseeing}</p>
+          <p><i class="fas fa-hotel icon"></i> Checkout from ${day.hotel}</p>
+        `;
+        itineraryContent.appendChild(itineraryItem);
+      });
+    }
 
     function populateHotelDetails(hotel) {
       const hotelDetailsContent = document.getElementById('hotelDetailsContent');
@@ -363,7 +367,7 @@
 
     function toggleSection(sectionId, button) {
       // Hide all sections
-      document.querySelectorAll('.itinerary-section, .flight-details-section, .hotel-details-section').forEach(section => {
+      document.querySelectorAll('.itinerary-section, .flight-details-section, .hotel-details-section, .activity-details-section').forEach(section => {
         section.classList.add('hidden');
       });
 

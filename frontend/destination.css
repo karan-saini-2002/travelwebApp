@@ -148,7 +148,8 @@ header.jumbotron.text-center {
   
   .offer-card {
     display: flex; /* Make the card a flex container */
-    width:30rem;/* Adjust width as needed */
+    width:90%;/* Adjust width as needed */
+    max-width: 30rem;
     margin: 20px auto; /* Center the card horizontally */
     border: 1px solid #ddd;
     border-radius: 10px;
