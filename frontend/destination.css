@@ -8,6 +8,7 @@ body {
     flex-direction: column; 
     background-color:rgb(234, 235, 235);
 }
+
 header.jumbotron.text-center {
   background-image:  url('../images/backimg1111.jpg');
     border-radius: 0%;
@@ -218,7 +219,14 @@ header.jumbotron.text-center {
    min-height: 15px;
    text-align: center; 
 }
-
+.navbar-nav.ml-aut{
+  margin-left: 50%;
+}
+@media screen and (max-width: 768px) {
+  .navbar-nav.ml-aut{
+    margin-left: 0%;
+  }
+}
 
 footer.text-center.mt-5 a {
     margin: 0 10px;

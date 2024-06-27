@@ -200,7 +200,7 @@
       const packageId = urlParams.get('id');
 
       if (packageId) {
-        fetch(`https://travelbackend-01hj.onrender.com/api/package/${packageId}`)
+        fetch(`http://localhost:5000/api/package/${packageId}`)
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok');

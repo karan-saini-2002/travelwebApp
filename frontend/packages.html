@@ -61,7 +61,7 @@
       if (destination) {
         document.getElementById('destinationName').innerText = `${destination.charAt(0).toUpperCase() + destination.slice(1)} Packages`;
         
-        fetch(`https://travelbackend-01hj.onrender.com/api/packages/${destination}`)
+        fetch(`http://localhost:5000/api/packages/${destination}`)
           .then(response => {
             if (!response.ok) {
               throw new Error(`Network response was not ok: ${response.statusText}`);
