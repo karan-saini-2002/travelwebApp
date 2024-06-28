@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
    <link rel="stylesheet" href="destination.css">
-
+   <link rel="stylesheet" href="pop.css">
    
 </head>
 <body>
@@ -42,13 +42,28 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button class="nav-link" id="auth-button" style="background-color:rgb(234, 235, 235); border-width:0; border-radius:5px;">Login</button>
+                <button class="nav-link" id="auth-button" style="background-color:white; border-width:0; border-radius:10px;">Login</button>
             </li>
         </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+              <button class="nav-link" id="profile-btn" onclick="openForm()"  style="background-color:white; border-width:0; border-radius:10px;"><i class="fas fa-user"></i></button>
+          </li>
+      </ul>
     </div>
     
 </nav>
-
+     
+<div class="form-popup" id="myForm">
+  <form class="form-container">
+    <button type="button" class="btn cancel" onclick="closeForm()" style="margin-right:0%; width:10px; color:black">X</button>
+    <h5 style="margin-bottom:15px; text-align:center; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Account</h5>
+    <button class="btns"><i class="fa fa-user"></i></button>
+    <p class="usernameid" style="text-align:center; margin-bottom: 100px; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif" id="user-id"></p>
+    <button class="btn"  id="autbtn" >Logout</button>
+    
+  </form>
+</div>
     <!-- Main Content -->
     
     <header class="jumbotron text-center">
@@ -135,6 +150,7 @@
             <a href="https://linkedin.com/in/yourprofile" target="_blank"><i class="fab fa-linkedin-in"></i></a>
     </footer>
     <script src="script.js"></script>
+    <script src="pop.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

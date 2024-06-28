@@ -219,14 +219,16 @@ header.jumbotron.text-center {
    min-height: 15px;
    text-align: center; 
 }
+
 .navbar-nav.ml-aut{
-  margin-left: 50%;
+  margin-left: 47%;
 }
 @media screen and (max-width: 768px) {
   .navbar-nav.ml-aut{
-    margin-left: 0%;
+    margin-left:0%;
   }
 }
+
 
 footer.text-center.mt-5 a {
     margin: 0 10px;

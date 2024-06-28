@@ -1,18 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
   
   sessionStorage.clear();
-  
+
   const authButton = document.getElementById('auth-button');
   const signupForm = document.getElementById('signupForm');
   const loginForm = document.getElementById('loginForm');
   const logoutBtn = document.getElementById('logoutBtn');
   const newBtn = document.getElementById('new-btn');
+  const profileBtn = document.getElementById('profile-btn');
   const updateBtn = document.querySelectorAll('.protected-button');
-
+  const userid=document.getElementById('user-id');
   
 
   function isLoggedIn() {
     return localStorage.getItem('loggedIn') === 'true';
+   
 }
 
   function updateAuthButton() {
@@ -25,8 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
 function newbtns() {
   if (isLoggedIn()) {
       newBtn.textContent = 'CreatePackage';
+     
   } else {
       newBtn.textContent = '';
+      
   }
 }
 function updateBtnfxn(){
@@ -39,6 +43,24 @@ function updateBtnfxn(){
     }
 });
 }
+  
+function updateprofileBtn(){
+  if(!isLoggedIn() && profileBtn){
+    profileBtn.remove();
+  }
+}
+function useridUpdate(){
+
+  if (localStorage.getItem("username") != null) {
+    userid.innerHTML = "Welcome "+localStorage.getItem("username");
+
+  }
+  else{
+    userid.innerHTML = '';
+  }
+
+}
+
 
 if(authButton){
 authButton.addEventListener('click', () => {
@@ -49,6 +71,8 @@ authButton.addEventListener('click', () => {
       updateAuthButton();
       updateBtnfxn();
       newbtns();
+      updateprofileBtn();
+      useridUpdate()
   } else {
     window.location.href = 'login.html';
   }
@@ -71,6 +95,7 @@ authButton.addEventListener('click', () => {
 
       else {
         localStorage.setItem(username, password);
+        localStorage.setItem('username', username);
           alert('Signup successful!');
           window.location.href = 'login.html'; // Redirect to login page after successful signup
         }  
@@ -86,14 +111,19 @@ authButton.addEventListener('click', () => {
       if (localStorage.getItem(username) === password) {
         localStorage.setItem('loggedIn', 'true');
         alert('Logged in');
+        localStorage.setItem('username', username);
         window.location.href = 'index.html';
-        
+       
     } else {
         alert('Invalid username or password');
     }
     });
   }
+
+
   updateAuthButton();
   updateBtnfxn();
   newbtns();
+  updateprofileBtn();
+  useridUpdate()
 });
