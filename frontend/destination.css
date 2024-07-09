@@ -221,7 +221,7 @@ header.jumbotron.text-center {
 }
 
 .navbar-nav.ml-aut{
-  margin-left: 47%;
+  margin-left: 45%;
 }
 @media screen and (max-width: 768px) {
   .navbar-nav.ml-aut{

@@ -1,85 +1,106 @@
-document.addEventListener('DOMContentLoaded', () => {
-  
-  sessionStorage.clear();
-
+document.addEventListener('DOMContentLoaded', async () => {
   const authButton = document.getElementById('auth-button');
   const signupForm = document.getElementById('signupForm');
   const loginForm = document.getElementById('loginForm');
-  const logoutBtn = document.getElementById('logoutBtn');
   const newBtn = document.getElementById('new-btn');
   const profileBtn = document.getElementById('profile-btn');
-  const updateBtn = document.querySelectorAll('.protected-button');
-  const userid=document.getElementById('user-id');
+  const updateBtns = document.querySelectorAll('.protected-button');
+  const userIdElement = document.getElementById('user-id');
+
   
+  if (!localStorage.getItem('loggedIn')) {
+    try {
+      const response = await fetch('http://localhost:5000/logout', {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        localStorage.setItem('loggedIn', 'false');
+        localStorage.removeItem('username');
+      } else {
+        console.error('Initial logout failed');
+      }
+    } catch (error) {
+      console.error('An error occurred during initial logout:', error);
+    }
+  }
 
   function isLoggedIn() {
     return localStorage.getItem('loggedIn') === 'true';
-   
-}
+  }
 
   function updateAuthButton() {
     if (isLoggedIn()) {
-        authButton.textContent = 'Logout';
+      authButton.textContent = 'Logout';
     } else {
-        authButton.textContent = 'Login/Signup';
+      authButton.textContent = 'Login/Signup';
     }
-}
-function newbtns() {
-  if (isLoggedIn()) {
-      newBtn.textContent = 'CreatePackage';
-     
-  } else {
-      newBtn.textContent = '';
-      
   }
-}
-function updateBtnfxn(){
-  updateBtn.forEach(button => {
+
+  function updateNewBtn() {
     if (isLoggedIn()) {
-        button.removeAttribute('disabled'); // Enable the button
+      newBtn.textContent = 'CreatePackage';
     } else {
-        button.setAttribute('disabled', 'true'); // Disable the button
-        button.href = '#'; // Prevent navigation
+      newBtn.textContent = '';
     }
-});
-}
-  
-function updateprofileBtn(){
-  if(!isLoggedIn() && profileBtn){
-    profileBtn.remove();
-  }
-}
-function useridUpdate(){
-
-  if (localStorage.getItem("username") != null) {
-    userid.innerHTML = "Welcome "+localStorage.getItem("username");
-
-  }
-  else{
-    userid.innerHTML = '';
   }
 
-}
-
-
-if(authButton){
-authButton.addEventListener('click', () => {
-  if (isLoggedIn()) {
-      // Log out the user
-      localStorage.setItem('loggedIn', 'false');
-      alert('Logged out');
-      updateAuthButton();
-      updateBtnfxn();
-      newbtns();
-      updateprofileBtn();
-      useridUpdate()
-  } else {
-    window.location.href = 'login.html';
+  function updateProtectedBtns() {
+    updateBtns.forEach(button => {
+      if (isLoggedIn()) {
+        button.removeAttribute('disabled'); 
+      } else {
+        button.setAttribute('disabled', 'true'); 
+        button.href = '#'; 
+      }
+    });
   }
-});
 
-}
-  
+  function updateProfileBtn() {
+    if (!isLoggedIn() && profileBtn) {
+      profileBtn.remove();
+    }
+  }
+
+  function updateUserId() {
+    if (localStorage.getItem('username') != null) {
+      userIdElement.innerHTML = "Welcome " + localStorage.getItem('username');
+    } else {
+      userIdElement.innerHTML = '';
+    }
+  }
+
+  if (authButton) {
+    authButton.addEventListener('click', async () => {
+      if (isLoggedIn()) {
+        try {
+          const response = await fetch('http://localhost:5000/logout', {
+            method: 'GET',
+            credentials: 'include' 
+          });
+          if (response.ok) {
+            localStorage.setItem('loggedIn', 'false');
+            localStorage.removeItem('username');
+            alert('Logged out');
+            updateAuthButton();
+            updateProtectedBtns();
+            updateNewBtn();
+            updateProfileBtn();
+            updateUserId();
+          } else {
+            const error = await response.json();
+            alert(`Logout failed: ${error.message}`);
+          }
+        } catch (error) {
+          alert('An error occurred during logout.');
+          console.error('Logout error:', error);
+        }
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+  }
+
   if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -91,39 +112,68 @@ authButton.addEventListener('click', () => {
       if (password !== confirmPassword) {
         alert('Passwords do not match');
         return;
-      } 
+      }
 
-      else {
-        localStorage.setItem(username, password);
-        localStorage.setItem('username', username);
+      try {
+        const response = await fetch('http://localhost:5000/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, username, password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('username', username);
           alert('Signup successful!');
-          window.location.href = 'login.html'; // Redirect to login page after successful signup
-        }  
+          window.location.href = 'login.html';
+        } else {
+          const error = await response.json();
+          alert(`Signup failed: ${error.message}`);
+        }
+      } catch (error) {
+        alert('An error occurred during signup.');
+        console.error('Signup error:', error);
+      }
     });
   }
 
-  if(loginForm){
+  if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
-      if (localStorage.getItem(username) === password) {
-        localStorage.setItem('loggedIn', 'true');
-        alert('Logged in');
-        localStorage.setItem('username', username);
-        window.location.href = 'index.html';
-       
-    } else {
-        alert('Invalid username or password');
-    }
+      try {
+        const response = await fetch('http://localhost:5000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('loggedIn', 'true');
+          localStorage.setItem('username', username);
+          alert('Logged in');
+          window.location.href = 'index.html';
+        } else {
+          const error = await response.json();
+          alert(`Login failed: ${error.message}`);
+        }
+      } catch (error) {
+        alert('An error occurred during login.');
+        console.error('Login error:', error);
+      }
     });
   }
 
-
   updateAuthButton();
-  updateBtnfxn();
-  newbtns();
-  updateprofileBtn();
-  useridUpdate()
+  updateProtectedBtns();
+  updateNewBtn();
+  updateProfileBtn();
+  updateUserId();
 });
