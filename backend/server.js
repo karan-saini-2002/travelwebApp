@@ -3,40 +3,25 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser'); // Add this to handle cookies
 
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(express.urlencoded({ extended: true }));
-
-
 app.use(bodyParser.json());
+app.use(cookieParser()); // Use cookie-parser to parse cookies
 
 // CORS options
 const corsOptions = {
-  origin: 'http://127.0.0.1:8080', 
-  credentials: true 
+  origin: 'http://127.0.0.1:8080', // Update with your client URL
+  credentials: true // Required to allow cookies with sessions
 };
-
 app.use(cors(corsOptions));
-
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_DB_URI,
-    ttl: 7 * 24 * 60 * 60 
-  }),
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'none' 
-  }
-}));
 
 // Connect to MongoDB
 const mongoURI = process.env.MONGO_DB_URI;
@@ -47,71 +32,110 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('MongoDB connected successfully'))
 .catch(err => console.error('MongoDB connection error:', err));
 
+// User schema and model
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   username: { type: String, unique: true, required: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  role: { type: String, default: 'user' } // Default role is 'user'
 });
 const User = mongoose.model('User', userSchema);
 
-app.post('/signup', async (req, res, next) => {
+// Signup Route
+app.post('/signup', async (req, res) => {
   const { email, username, password } = req.body;
   try {
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email or username already exists' });
+    // Check if user exists
+    const userExists = await User.findOne({ $or: [{ email }, { username }] });
+    if (userExists) {
+      return res.status(400).json({ message: 'Email or Username already exists' });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ email, username, password: hashedPassword });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create new user
+    const newUser = new User({
+      email,
+      username,
+      password: hashedPassword
+    });
+
     await newUser.save();
-    res.status(201).json({ message: 'Signup successful' });
+    res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
-    next(err); 
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-app.post('/login', async (req, res, next) => {
+// Login Route
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
+
   try {
     const user = await User.findOne({ username });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(400).json({ message: 'Invalid username or password' });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
-    req.session.user = user;
-    res.status(200).json({ message: 'Login successful' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Set cookie with the JWT token
+    res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000, sameSite: 'None', secure: true });
+    res.status(200).json({ message: 'Logged in successfully', role: user.role });
+
   } catch (err) {
-    next(err); 
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-app.get('/logout', (req, res) => {
-  if (req.session) {
-    req.session.destroy(err => {
-      if (err) {
-        return res.status(500).json({ message: 'Could not log out' });
-      }
-      res.clearCookie('connect.sid');
-      res.status(200).json({ message: 'Logout successful' });
-    });
-  } else {
-    res.clearCookie('connect.sid');
-    res.status(200).json({ message: 'Logout successful' });
-  }
-});
+// Authentication middleware
+const auth = async (req, res, next) => {
+  const token = req.cookies.jwt;
 
-// Middleware to check if the user is authenticated
-function checkAuth(req, res, next) {
-  if (req.session.user) {
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    req.user = user; // Attach user object to request
     next();
-  } else {
-    res.status(401).send('Unauthorized');
+  } catch (err) {
+    console.error('Token verification error:', err);
+    res.status(401).json({ message: 'Token is not valid' });
   }
-}
+};
 
-app.get('/protected', checkAuth, (req, res) => {
-  res.status(200).send('You are authenticated');
+
+
+// Protected Route (example)
+app.get('/protected', auth, (req, res) => {
+  res.status(200).json({ message: 'Welcome to the protected route' });
 });
 
+// Logout Route
+app.get('/logout', (req, res) => {
+  res.clearCookie('jwt'); // Clear the JWT cookie
+  res.status(200).json({ message: 'Logged out successfully' });
+});
+
+// Schema and model for packages
 const flightSchema = new mongoose.Schema({
   details: String,
   flightNumber: String,
@@ -165,7 +189,7 @@ const packageSchema = new mongoose.Schema({
 });
 const Package = mongoose.model('Package', packageSchema);
 
-// Routes
+// Routes for packages
 app.get('/api/packages/:destination', async (req, res) => {
   const { destination } = req.params;
   try {
@@ -195,7 +219,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 });
 
-
+// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

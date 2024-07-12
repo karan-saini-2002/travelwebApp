@@ -7,28 +7,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const updateBtns = document.querySelectorAll('.protected-button');
   const userIdElement = document.getElementById('user-id');
 
-  
-  if (!localStorage.getItem('loggedIn')) {
-    try {
-      const response = await fetch('http://localhost:5000/logout', {
-        method: 'GET',
-        credentials: 'include'
-      });
-      if (response.ok) {
-        localStorage.setItem('loggedIn', 'false');
-        localStorage.removeItem('username');
-      } else {
-        console.error('Initial logout failed');
-      }
-    } catch (error) {
-      console.error('An error occurred during initial logout:', error);
-    }
-  }
+  // Log elements to verify they are correctly selected
+  console.log({ authButton, signupForm, loginForm, newBtn, profileBtn, updateBtns, userIdElement });
 
+  // Function to check if user is logged in
   function isLoggedIn() {
     return localStorage.getItem('loggedIn') === 'true';
   }
 
+  // Function to update authentication button text
   function updateAuthButton() {
     if (isLoggedIn()) {
       authButton.textContent = 'Logout';
@@ -37,50 +24,81 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  // Function to update visibility of Create Package button
   function updateNewBtn() {
     if (isLoggedIn()) {
-      newBtn.textContent = 'CreatePackage';
+      const role = localStorage.getItem('role');
+      if (role === 'admin') {
+        newBtn.textContent = 'Create Package';
+      } else {
+        newBtn.textContent = 'Subscribe';
+      }
     } else {
       newBtn.textContent = '';
     }
   }
 
+  // Function to update visibility and state of protected buttons
   function updateProtectedBtns() {
     updateBtns.forEach(button => {
       if (isLoggedIn()) {
-        button.removeAttribute('disabled'); 
+        button.removeAttribute('disabled');
       } else {
-        button.setAttribute('disabled', 'true'); 
-        button.href = '#'; 
+        button.setAttribute('disabled', 'true');
+        button.href = '#';
       }
     });
   }
 
+  // Function to update visibility of profile button
   function updateProfileBtn() {
     if (!isLoggedIn() && profileBtn) {
       profileBtn.remove();
     }
   }
 
+  // Function to update user ID display
   function updateUserId() {
-    if (localStorage.getItem('username') != null) {
-      userIdElement.innerHTML = "Welcome " + localStorage.getItem('username');
+    const username = localStorage.getItem('username');
+    if (username) {
+      userIdElement.innerHTML = `Welcome ${username}`;
     } else {
       userIdElement.innerHTML = '';
     }
   }
 
+  // Initial logout if not logged in
+  if (!isLoggedIn()) {
+    try {
+      const response = await fetch('http://localhost:5000/logout', {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        localStorage.setItem('loggedIn', 'false');
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+      } else {
+        console.error('Initial logout failed');
+      }
+    } catch (error) {
+      console.error('An error occurred during initial logout:', error);
+    }
+  }
+
+  // Event listener for authentication button (Login/Logout)
   if (authButton) {
     authButton.addEventListener('click', async () => {
       if (isLoggedIn()) {
         try {
           const response = await fetch('http://localhost:5000/logout', {
             method: 'GET',
-            credentials: 'include' 
+            credentials: 'include'
           });
           if (response.ok) {
             localStorage.setItem('loggedIn', 'false');
             localStorage.removeItem('username');
+            localStorage.removeItem('role');
             alert('Logged out');
             updateAuthButton();
             updateProtectedBtns();
@@ -101,6 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Event listener for signup form submission
   if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -139,6 +158,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Event listener for login form submission
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -151,13 +171,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ username, password })
+          body: JSON.stringify({ username, password }),
+          credentials: 'include'
         });
 
         if (response.ok) {
           const data = await response.json();
           localStorage.setItem('loggedIn', 'true');
           localStorage.setItem('username', username);
+          localStorage.setItem('role', data.role); // Assuming role is returned in response
           alert('Logged in');
           window.location.href = 'index.html';
         } else {
@@ -171,6 +193,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Initialize UI components on page load
   updateAuthButton();
   updateProtectedBtns();
   updateNewBtn();
