@@ -14,12 +14,11 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cookieParser()); // Use cookie-parser to parse cookies
-
+app.use(cookieParser()); 
 // CORS options
 const corsOptions = {
   origin: 'http://127.0.0.1:8080', // Update with your client URL
-  credentials: true // Required to allow cookies with sessions
+  credentials: true 
 };
 app.use(cors(corsOptions));
 
@@ -37,7 +36,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   username: { type: String, unique: true, required: true },
   password: { type: String, required: true },
-  role: { type: String, default: 'user' } // Default role is 'user'
+  role: { type: String, default: 'user' } 
 });
 const User = mongoose.model('User', userSchema);
 
@@ -45,17 +44,17 @@ const User = mongoose.model('User', userSchema);
 app.post('/signup', async (req, res) => {
   const { email, username, password } = req.body;
   try {
-    // Check if user exists
+    
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
     if (userExists) {
       return res.status(400).json({ message: 'Email or Username already exists' });
     }
 
-    // Hash password
+    
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new user
+   
     const newUser = new User({
       email,
       username,
@@ -114,7 +113,7 @@ const auth = async (req, res, next) => {
       throw new Error('User not found');
     }
 
-    req.user = user; // Attach user object to request
+    req.user = user; 
     next();
   } catch (err) {
     console.error('Token verification error:', err);
@@ -124,18 +123,18 @@ const auth = async (req, res, next) => {
 
 
 
-// Protected Route (example)
+
 app.get('/protected', auth, (req, res) => {
   res.status(200).json({ message: 'Welcome to the protected route' });
 });
 
-// Logout Route
+
 app.get('/logout', (req, res) => {
   res.clearCookie('jwt'); // Clear the JWT cookie
   res.status(200).json({ message: 'Logged out successfully' });
 });
 
-// Schema and model for packages
+
 const flightSchema = new mongoose.Schema({
   details: String,
   flightNumber: String,

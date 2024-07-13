@@ -7,15 +7,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const updateBtns = document.querySelectorAll('.protected-button');
   const userIdElement = document.getElementById('user-id');
 
-  // Log elements to verify they are correctly selected
-  console.log({ authButton, signupForm, loginForm, newBtn, profileBtn, updateBtns, userIdElement });
+  
 
-  // Function to check if user is logged in
+  
   function isLoggedIn() {
     return localStorage.getItem('loggedIn') === 'true';
   }
 
-  // Function to update authentication button text
+  
   function updateAuthButton() {
     if (isLoggedIn()) {
       authButton.textContent = 'Logout';
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Function to update visibility of Create Package button
+  
   function updateNewBtn() {
     if (isLoggedIn()) {
       const role = localStorage.getItem('role');
@@ -38,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Function to update visibility and state of protected buttons
+  
   function updateProtectedBtns() {
     updateBtns.forEach(button => {
       if (isLoggedIn()) {
@@ -50,14 +49,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Function to update visibility of profile button
+  
   function updateProfileBtn() {
     if (!isLoggedIn() && profileBtn) {
       profileBtn.remove();
     }
   }
 
-  // Function to update user ID display
+  
   function updateUserId() {
     const username = localStorage.getItem('username');
     if (username) {
@@ -67,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Initial logout if not logged in
+  
   if (!isLoggedIn()) {
     try {
       const response = await fetch('http://localhost:5000/logout', {
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Event listener for authentication button (Login/Logout)
+  
   if (authButton) {
     authButton.addEventListener('click', async () => {
       if (isLoggedIn()) {
@@ -119,7 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Event listener for signup form submission
+
   if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -158,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Event listener for login form submission
+  
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -193,7 +192,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Initialize UI components on page load
+  
   updateAuthButton();
   updateProtectedBtns();
   updateNewBtn();
