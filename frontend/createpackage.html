@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Package Form</title>
+  <link rel="stylesheet" href="createpackage.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Create New Package</h2>
+    <form id="packageForm">
+      
+      <label for="destination">Destination:</label>
+      <input type="text" id="destination" name="destination" value="Paris" required><br>
+      
+      
+      <label for="name">Package Name:</label>
+      <input type="text" id="name" name="name" value="Royal Rajasthan Adventure" required><br>
+      
+     
+      <label for="duration">Duration:</label>
+      <input type="text" id="duration" name="duration" value="7N/8D" required><br>
+      
+      
+      <fieldset>
+        <legend>Flights</legend>
+        <label for="flightDetails">Details:</label>
+        <input type="text" id="flightDetails" name="flights.details" value="Round Trip Flights" required><br>
+        <label for="flightNumber">Flight Number:</label>
+        <input type="text" id="flightNumber" name="flights.flightNumber" value="AI3456" required><br>
+        <label for="departureDate">Departure Date:</label>
+        <input type="datetime-local" id="departureDate" name="flights.departureDate" value="2025-11-01T10:00" required><br>
+        <label for="returnDate">Return Date:</label>
+        <input type="datetime-local" id="returnDate" name="flights.returnDate" value="2025-11-08T19:00" required><br>
+      </fieldset>
+      
+      
+      <fieldset>
+        <legend>Hotels</legend>
+        <label for="hotelDetails">Details:</label>
+        <input type="text" id="hotelDetails" name="hotels.details" value="Luxury Heritage Hotels" required><br>
+        <label for="hotelName">Name:</label>
+        <input type="text" id="hotelName" name="hotels.name" value="Taj Lake Palace, Udaipur & Rambagh Palace, Jaipur" required><br>
+        <label for="hotelAddress">Address:</label>
+        <input type="text" id="hotelAddress" name="hotels.address" value="Udaipur & Jaipur, Rajasthan" required><br>
+        <label for="checkIn">Check-In Date:</label>
+        <input type="datetime-local" id="checkIn" name="hotels.checkIn" value="2025-11-01T14:00" required><br>
+        <label for="checkOut">Check-Out Date:</label>
+        <input type="datetime-local" id="checkOut" name="hotels.checkOut" value="2025-11-08T12:00" required><br>
+        <label for="bookingDetails">Booking Details:</label>
+        <input type="text" id="bookingDetails" name="hotels.bookingDetails" value="Booking Reference RA123" required><br>
+      </fieldset>
+      
+      
+      <label for="transfers">Transfers:</label>
+      <input type="text" id="transfers" name="transfers" value="Private Car with Chauffeur" required><br>
+      
+      
+      <fieldset>
+        <legend>Activities</legend>
+        <div id="activitiesContainer">
+          <!-- Activity 1 -->
+          <div class="activity">
+            <label for="activityName1">Activity Name:</label>
+            <input type="text" id="activityName1" name="activities[0].name" value="Udaipur City Palace Tour" required><br>
+            <label for="activityImg1">Activity Image URL:</label>
+            <input type="url" id="activityImg1" name="activities[0].img" value="https://example.com/udaipur-city-palace.jpg" required><br>
+            <label for="activityDescription1">Activity Description:</label>
+            <textarea id="activityDescription1" name="activities[0].description" required>Explore the magnificent City Palace of Udaipur, an architectural marvel overlooking Lake Pichola. Discover its intricate peacock mosaics, grand courtyards, and historic artifacts. Learn about the Mewar dynasty's rich history from your expert guide.</textarea><br>
+          </div>
+          
+          <!-- Activity 2 -->
+          <div class="activity">
+            <label for="activityName2">Activity Name:</label>
+            <input type="text" id="activityName2" name="activities[1].name" value="Desert Safari in Jaisalmer" required><br>
+            <label for="activityImg2">Activity Image URL:</label>
+            <input type="url" id="activityImg2" name="activities[1].img" value="https://example.com/desert-safari.jpg" required><br>
+            <label for="activityDescription2">Activity Description:</label>
+            <textarea id="activityDescription2" name="activities[1].description" required>Embark on an exciting desert safari in the golden dunes of Jaisalmer. Enjoy camel rides, witness a spectacular sunset, and experience a traditional Rajasthani cultural performance in a desert camp. Relish a delicious Rajasthani dinner under the stars.</textarea><br>
+          </div>
+          
+          <!-- Activity 3 -->
+          <div class="activity">
+            <label for="activityName3">Activity Name:</label>
+            <input type="text" id="activityName3" name="activities[2].name" value="Amer Fort Elephant Ride" required><br>
+            <label for="activityImg3">Activity Image URL:</label>
+            <input type="url" id="activityImg3" name="activities[2].img" value="https://example.com/amer-fort.jpg" required><br>
+            <label for="activityDescription3">Activity Description:</label>
+            <textarea id="activityDescription3" name="activities[2].description" required>Visit the majestic Amer Fort in Jaipur and experience an elephant ride up the hill to the fort entrance. Explore the exquisite palaces, courtyards, and gardens of this historic fort, and enjoy panoramic views of the surrounding landscape.</textarea><br>
+          </div>
+        </div>
+      </fieldset>
+      
+      
+      <fieldset>
+        <legend>Itinerary</legend>
+        <!-- Day 1 -->
+        <div class="itinerary">
+          <label for="day1">Day 1:</label>
+          <input type="number" id="day1" name="itinerary[0].day" value="1" required><br>
+          <label for="date1">Date:</label>
+          <input type="datetime-local" id="date1" name="itinerary[0].date" value="2025-11-01T00:00" required><br>
+          <label for="hotel1">Hotel:</label>
+          <input type="text" id="hotel1" name="itinerary[0].hotel" value="Taj Lake Palace, Udaipur" required><br>
+          <label for="hotelStars1">Hotel Stars:</label>
+          <input type="text" id="hotelStars1" name="itinerary[0].hotelStars" value="5" required><br>
+          <label for="car1">Car:</label>
+          <input type="text" id="car1" name="itinerary[0].car" value="Private Car with Chauffeur" required><br>
+          <label for="sightseeing1">Sightseeing:</label>
+          <input type="text" id="sightseeing1" name="itinerary[0].sightseeing" value="Udaipur City Palace Tour" required><br>
+        </div>
+        
+        <!-- Day 2 -->
+        <div class="itinerary">
+          <label for="day2">Day 2:</label>
+          <input type="number" id="day2" name="itinerary[1].day" value="2" required><br>
+          <label for="date2">Date:</label>
+          <input type="datetime-local" id="date2" name="itinerary[1].date" value="2025-11-02T00:00" required><br>
+          <label for="hotel2">Hotel:</label>
+          <input type="text" id="hotel2" name="itinerary[1].hotel" value="Rambagh Palace, Jaipur" required><br>
+          <label for="hotelStars2">Hotel Stars:</label>
+          <input type="text" id="hotelStars2" name="itinerary[1].hotelStars" value="5" required><br>
+          <label for="car2">Car:</label>
+          <input type="text" id="car2" name="itinerary[1].car" value="Private Car with Chauffeur" required><br>
+          <label for="sightseeing2">Sightseeing:</label>
+          <input type="text" id="sightseeing2" name="itinerary[1].sightseeing" value="Desert Safari in Jaisalmer" required><br>
+        </div>
+        
+        <!-- Day 3 -->
+        <div class="itinerary">
+          <label for="day3">Day 3:</label>
+          <input type="number" id="day3" name="itinerary[2].day" value="3" required><br>
+          <label for="date3">Date:</label>
+          <input type="datetime-local" id="date3" name="itinerary[2].date" value="2025-11-03T00:00" required><br>
+          <label for="hotel3">Hotel:</label>
+          <input type="text" id="hotel3" name="itinerary[2].hotel" value="Taj Lake Palace, Udaipur" required><br>
+          <label for="hotelStars3">Hotel Stars:</label>
+          <input type="text" id="hotelStars3" name="itinerary[2].hotelStars" value="5" required><br>
+          <label for="car3">Car:</label>
+          <input type="text" id="car3" name="itinerary[2].car" value="Private Car with Chauffeur" required><br>
+          <label for="sightseeing3">Sightseeing:</label>
+          <input type="text" id="sightseeing3" name="itinerary[2].sightseeing" value="Amer Fort Elephant Ride" required><br>
+        </div>
+      </fieldset>
+      
+      
+      <label for="meals">Meals:</label>
+      <input type="text" id="meals" name="meals" value="Authentic Rajasthani Cuisine" required><br>
+      
+      
+      <label for="price">Price:</label>
+      <input type="text" id="price" name="price" value="INR 1,20,000" required><br>
+      
+      
+      <label for="img">Image URL:</label>
+      <input type="url" id="img" name="img" value="https://example.com/amer-fort.jpg" required><br>
+      
+      
+      <label for="imgUrls">Additional Image URLs (comma separated):</label>
+      <input type="text" id="imgUrls" name="imgUrls" value="https://example.com/image41.jpg, https://example.com/image42.jpg, https://example.com/image43.jpg" required><br>
+      
+      
+      <fieldset>
+        <legend>Policies</legend>
+        <!-- Policy 1 -->
+        <div class="policy">
+          <label for="policyTitle1">Policy Title:</label>
+          <input type="text" id="policyTitle1" name="policies[0].title" value="Cancellation Policy" required><br>
+          <label for="policyDescription1">Policy Description:</label>
+          <textarea id="policyDescription1" name="policies[0].description" required>Full refund if canceled within 30 days.</textarea><br>
+        </div>
+        
+        <!-- Policy 2 -->
+        <div class="policy">
+          <label for="policyTitle2">Policy Title:</label>
+          <input type="text" id="policyTitle2" name="policies[1].title" value="Payment Policy" required><br>
+          <label for="policyDescription2">Policy Description:</label>
+          <textarea id="policyDescription2" name="policies[1].description" required>50% deposit required upon booking. Full payment due 15 days before arrival.</textarea><br>
+        </div>
+        
+        <!-- Policy 3 -->
+        <div class="policy">
+          <label for="policyTitle3">Policy Title:</label>
+          <input type="text" id="policyTitle3" name="policies[2].title" value="Insurance" required><br>
+          <label for="policyDescription3">Policy Description:</label>
+          <textarea id="policyDescription3" name="policies[2].description" required>Travel insurance recommended.</textarea><br>
+        </div>
+      </fieldset>
+      
+      
+      <button type="submit" href="destinations.html">Create Package</button>
+    </form>
+  </div>
+
+  <script src="createpackage.js"></script>
+</body>
+</html>
+

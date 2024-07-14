@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser'); // Add this to handle cookies
+const cookieParser = require('cookie-parser'); 
 
 require('dotenv').config();
 
@@ -17,7 +17,8 @@ app.use(bodyParser.json());
 app.use(cookieParser()); 
 // CORS options
 const corsOptions = {
-  origin: 'http://127.0.0.1:8080', // Update with your client URL
+  origin: 'http://127.0.0.1:8080', 
+  methods: ['GET', 'POST'], 
   credentials: true 
 };
 app.use(cors(corsOptions));
@@ -31,7 +32,7 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('MongoDB connected successfully'))
 .catch(err => console.error('MongoDB connection error:', err));
 
-// User schema and model
+
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   username: { type: String, unique: true, required: true },
@@ -40,7 +41,7 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
-// Signup Route
+
 app.post('/signup', async (req, res) => {
   const { email, username, password } = req.body;
   try {
@@ -68,7 +69,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// Login Route
+
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -87,7 +88,7 @@ app.post('/login', async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Set cookie with the JWT token
+    
     res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000, sameSite: 'None', secure: true });
     res.status(200).json({ message: 'Logged in successfully', role: user.role });
 
@@ -97,7 +98,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Authentication middleware
+
 const auth = async (req, res, next) => {
   const token = req.cookies.jwt;
 
@@ -182,13 +183,15 @@ const packageSchema = new mongoose.Schema({
   meals: String,
   price: String,
   img: String,
-  imgUrls: [String],
+  imgUrls: [String], 
   policies: [policySchema],
   itinerary: [itineraryDaySchema]
 });
+
 const Package = mongoose.model('Package', packageSchema);
 
-// Routes for packages
+
+
 app.get('/api/packages/:destination', async (req, res) => {
   const { destination } = req.params;
   try {
@@ -212,13 +215,13 @@ app.get('/api/package/:id', async (req, res) => {
   }
 });
 
-// Error handling middleware
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');
 });
 
-// Start server
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

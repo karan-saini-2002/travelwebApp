@@ -7,14 +7,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const updateBtns = document.querySelectorAll('.protected-button');
   const userIdElement = document.getElementById('user-id');
 
-  
-
-  
   function isLoggedIn() {
     return localStorage.getItem('loggedIn') === 'true';
   }
 
-  
   function updateAuthButton() {
     if (isLoggedIn()) {
       authButton.textContent = 'Logout';
@@ -23,12 +19,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  
   function updateNewBtn() {
     if (isLoggedIn()) {
       const role = localStorage.getItem('role');
       if (role === 'admin') {
         newBtn.textContent = 'Create Package';
+        newBtn.setAttribute('href', 'createpackage.html');
       } else {
         newBtn.textContent = 'Subscribe';
       }
@@ -37,7 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  
   function updateProtectedBtns() {
     updateBtns.forEach(button => {
       if (isLoggedIn()) {
@@ -49,14 +44,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  
   function updateProfileBtn() {
     if (!isLoggedIn() && profileBtn) {
       profileBtn.remove();
     }
   }
 
-  
   function updateUserId() {
     const username = localStorage.getItem('username');
     if (username) {
@@ -66,7 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  
   if (!isLoggedIn()) {
     try {
       const response = await fetch('http://localhost:5000/logout', {
@@ -85,7 +77,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  
   if (authButton) {
     authButton.addEventListener('click', async () => {
       if (isLoggedIn()) {
@@ -117,7 +108,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
   }
-
 
   if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
@@ -157,7 +147,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -178,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const data = await response.json();
           localStorage.setItem('loggedIn', 'true');
           localStorage.setItem('username', username);
-          localStorage.setItem('role', data.role); // Assuming role is returned in response
+          localStorage.setItem('role', data.role); 
           alert('Logged in');
           window.location.href = 'index.html';
         } else {
@@ -192,10 +181,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  
   updateAuthButton();
   updateProtectedBtns();
   updateNewBtn();
   updateProfileBtn();
   updateUserId();
+
 });
