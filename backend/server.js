@@ -190,6 +190,53 @@ const packageSchema = new mongoose.Schema({
 
 const Package = mongoose.model('Package', packageSchema);
 
+app.post('/submit_package', async (req, res) => {
+  try {
+    
+    const {
+      destination,
+      name,
+      duration,
+      flights,
+      hotels,
+      transfers,
+      activities,
+      meals,
+      price,
+      img,
+      imgUrls,
+      policies,
+      itinerary
+    } = req.body;
+
+    const newPackage = new Package({
+      destination,
+      name,
+      duration,
+      flights,
+      hotels,
+      transfers,
+      activities,
+      meals,
+      price,
+      img,
+      imgUrls: Array.isArray(imgUrls) ? imgUrls : [imgUrls], 
+      policies,
+      itinerary
+    });
+
+    
+    await newPackage.save();
+
+    
+    res.status(201).json({ message: 'Package created successfully' });
+  } catch (error) {
+    console.error('Error creating package:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 
 
 app.get('/api/packages/:destination', async (req, res) => {

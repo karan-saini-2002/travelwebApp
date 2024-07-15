@@ -15,15 +15,4 @@ function openForm() {
     document.getElementById("myForm").style.display = "none";
   }
 
-  if(autBtn){
-    autBtn.addEventListener('click', () => {
-      if (isLoggedIn()) {
-          // Log out the user
-          localStorage.setItem('loggedIn', 'false');
-          alert('Logged out');
-
-      } else {
-        window.location.href = 'login.html';
-      }
-    });
-}
+  
