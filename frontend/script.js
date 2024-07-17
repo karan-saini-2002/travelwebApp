@@ -165,9 +165,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (response.ok) {
           const data = await response.json();
+          localStorage.setItem('jwt', data.token);
           localStorage.setItem('loggedIn', 'true');
           localStorage.setItem('username', username);
           localStorage.setItem('role', data.role); 
+          localStorage.setItem('userId', data.userId); 
+          
           alert('Logged in');
           window.location.href = 'index.html';
         } else {

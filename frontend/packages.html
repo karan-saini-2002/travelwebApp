@@ -53,68 +53,94 @@
         <a href="https://linkedin.com/in/yourprofile" target="_blank"><i class="fab fa-linkedin-in"></i></a>
 </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const destination = urlParams.get('destination');
-      
-      if (destination) {
-        document.getElementById('destinationName').innerText = `${destination.charAt(0).toUpperCase() + destination.slice(1)} Packages`;
-        
-        fetch(`http://localhost:5000/api/packages/${destination}`)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`Network response was not ok: ${response.statusText}`);
-            }
-            return response.json();
-          })
-          .then(data => {
-            console.log('Fetched data:', data); // Log the fetched data
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const destination = urlParams.get('destination');
+    const userId = localStorage.getItem('userId'); // Get the logged-in user's ID
 
-            const packagesContainer = document.getElementById('packagesContainer');
-            packagesContainer.innerHTML = ''; // Clear previous content
+    if (destination) {
+      document.getElementById('destinationName').innerText = `${destination.charAt(0).toUpperCase() + destination.slice(1)} Packages`;
 
-            if (Array.isArray(data) && data.length > 0) {
-              data.forEach(pkg => {
-                const packageCard = document.createElement('div');
-                packageCard.className = 'col-md-4 mb-4';
-                packageCard.innerHTML = `
-                  <div class="card">
-                    <img src="${pkg.img}" class="card-img-top" alt="${pkg.name}">
-                    <div class="card-body">
-                      <h5 class="card-title">${pkg.name}</h5>
-                      <p class="card-text">
-                        <strong>Duration:</strong> ${pkg.duration}<br>
-                        <strong>Flights:</strong> ${pkg.flights ? pkg.flights.details : 'N/A'}<br>
-                        <strong>Hotels:</strong> ${pkg.hotels ? pkg.hotels.details : 'N/A'}<br>
-                        <strong>Transfers:</strong> ${pkg.transfers}<br>
-                        <strong>Activities:</strong>  ${pkg.activities.map(activity => `${activity.name},`).join('')}<br>
-                        <strong>Meals:</strong> ${pkg.meals}<br>
-                        <strong>Price:</strong> ${pkg.price}
-                      </p>
-                      <div class="d-flex justify-content-between">
-                        <a href="details.html?id=${pkg._id}" class="btn">View</a>
-                        <a href="#" class="btn">Book</a>
-                      </div>
+      fetch(`http://localhost:5000/api/packages/${destination}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Fetched data:', data); // Log the fetched data
+
+          const packagesContainer = document.getElementById('packagesContainer');
+          packagesContainer.innerHTML = ''; // Clear previous content
+
+          if (Array.isArray(data) && data.length > 0) {
+            data.forEach(pkg => {
+              const packageCard = document.createElement('div');
+              packageCard.className = 'col-md-4 mb-4';
+              packageCard.innerHTML = `
+                <div class="card">
+                  <img src="${pkg.img}" class="card-img-top" alt="${pkg.name}">
+                  <div class="card-body">
+                    <h5 class="card-title">${pkg.name}</h5>
+                    <p class="card-text">
+                      <strong>Duration:</strong> ${pkg.duration}<br>
+                      <strong>Flights:</strong> ${pkg.flights ? pkg.flights.details : 'N/A'}<br>
+                      <strong>Hotels:</strong> ${pkg.hotels ? pkg.hotels.details : 'N/A'}<br>
+                      <strong>Transfers:</strong> ${pkg.transfers}<br>
+                      <strong>Activities:</strong> ${pkg.activities.map(activity => `${activity.name},`).join('')}<br>
+                      <strong>Meals:</strong> ${pkg.meals}<br>
+                      <strong>Price:</strong> ${pkg.price}
+                    </p>
+                    <div class="d-flex justify-content-between">
+                      ${
+                        pkg.createdBy === userId
+                          ? `<a href="edit_package.html?id=${pkg._id}" class="btn">Edit</a>
+                             <a href="#" class="btn" onclick="deletePackage('${pkg._id}')">Delete</a>`
+                          : `<a href="details.html?id=${pkg._id}" class="btn">View</a>
+                             <a href="#" class="btn">Book</a>`
+                      }
                     </div>
                   </div>
-                `;
-                packagesContainer.appendChild(packageCard);
-              });
-            } else {
-              packagesContainer.innerHTML = '<p>No packages available for this destination.</p>';
-            }
-          })
-          .catch(error => {
-            console.error('Error fetching packages:', error);
-            const packagesContainer = document.getElementById('packagesContainer');
-            packagesContainer.innerHTML = '<p>Error fetching packages. Please try again later.</p>';
-          });
-      } else {
-        console.error('Destination parameter not found');
-        document.getElementById('destinationName').innerText = 'Destination Not Specified';
+                </div>
+              `;
+              packagesContainer.appendChild(packageCard);
+            });
+          } else {
+            packagesContainer.innerHTML = '<p>No packages available for this destination.</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching packages:', error);
+          const packagesContainer = document.getElementById('packagesContainer');
+          packagesContainer.innerHTML = '<p>Error fetching packages. Please try again later.</p>';
+        });
+    } else {
+      console.error('Destination parameter not found');
+      document.getElementById('destinationName').innerText = 'Destination Not Specified';
+    }
+  });
+
+  async function deletePackage(packageId) {
+    try {
+      const response = await fetch(`http://localhost:5000/api/packages/${packageId}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error deleting package: ${errorData.message}`);
       }
-    });
-  </script>
+  
+      alert('Package deleted successfully!');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting package:', error);
+      alert(error.message || 'Error deleting package');
+    }
+  }
+</script>
+
 </body>
 </html>

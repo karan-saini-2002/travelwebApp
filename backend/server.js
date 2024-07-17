@@ -18,7 +18,7 @@ app.use(cookieParser());
 // CORS options
 const corsOptions = {
   origin: 'http://127.0.0.1:8080', 
-  methods: ['GET', 'POST'], 
+  methods: ['GET', 'POST','DELETE'], 
   credentials: true 
 };
 app.use(cors(corsOptions));
@@ -86,11 +86,10 @@ app.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    
+    const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000, sameSite: 'None', secure: true });
-    res.status(200).json({ message: 'Logged in successfully', role: user.role });
+    res.status(200).json({ message: 'Logged in successfully', role: user.role, userId: user._id, token });
+    
 
   } catch (err) {
     console.error('Login error:', err);
@@ -100,27 +99,28 @@ app.post('/login', async (req, res) => {
 
 
 const auth = async (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.headers.authorization;
 
-  if (!token) {
+  if (!token || !token.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
 
     if (!user) {
       throw new Error('User not found');
     }
 
-    req.user = user; 
+    req.user = user;
     next();
   } catch (err) {
     console.error('Token verification error:', err);
     res.status(401).json({ message: 'Token is not valid' });
   }
 };
+
 
 
 
@@ -185,12 +185,13 @@ const packageSchema = new mongoose.Schema({
   img: String,
   imgUrls: [String], 
   policies: [policySchema],
-  itinerary: [itineraryDaySchema]
+  itinerary: [itineraryDaySchema],
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 const Package = mongoose.model('Package', packageSchema);
 
-app.post('/submit_package', async (req, res) => {
+app.post('/submit_package', auth ,async (req, res) => {
   try {
     
     const {
@@ -208,7 +209,7 @@ app.post('/submit_package', async (req, res) => {
       policies,
       itinerary
     } = req.body;
-
+    
     const newPackage = new Package({
       destination,
       name,
@@ -222,7 +223,8 @@ app.post('/submit_package', async (req, res) => {
       img,
       imgUrls: Array.isArray(imgUrls) ? imgUrls : [imgUrls], 
       policies,
-      itinerary
+      itinerary,
+      createdBy:req.user._id
     });
 
     
@@ -259,6 +261,23 @@ app.get('/api/package/:id', async (req, res) => {
     res.json(package);
   } catch (err) {
     res.status(500).send(err);
+  }
+});
+
+app.delete('/api/packages/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedPackage = await Package.findByIdAndDelete(id);
+
+    if (!deletedPackage) {
+      return res.status(404).json({ message: 'Package not found' });
+    }
+
+    res.status(200).json({ message: 'Package deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting package:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
