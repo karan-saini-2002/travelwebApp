@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Package Form</title>
+  <link rel="stylesheet" href="editpackage.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Edit Package</h2>
+    <form id="editPackageForm">
+      <input type="hidden" id="packageId" name="packageId">
+      
+      <!-- Destination -->
+      <label for="destination">Destination:</label>
+      <input type="text" id="destination" name="destination" required><br>
+      
+      <!-- Package Name -->
+      <label for="name">Package Name:</label>
+      <input type="text" id="name" name="name" required><br>
+      
+      <!-- Duration -->
+      <label for="duration">Duration:</label>
+      <input type="text" id="duration" name="duration" required><br>
+      
+      <!-- Flights -->
+      <fieldset>
+        <legend>Flights</legend>
+        <label for="flightDetails">Details:</label>
+        <input type="text" id="flightDetails" name="flights.details" required><br>
+        <label for="flightNumber">Flight Number:</label>
+        <input type="text" id="flightNumber" name="flights.flightNumber" required><br>
+        <label for="departureDate">Departure Date:</label>
+        <input type="datetime-local" id="departureDate" name="flights.departureDate" required><br>
+        <label for="returnDate">Return Date:</label>
+        <input type="datetime-local" id="returnDate" name="flights.returnDate" required><br>
+      </fieldset>
+      
+      <!-- Hotels -->
+      <fieldset>
+        <legend>Hotels</legend>
+        <label for="hotelDetails">Details:</label>
+        <input type="text" id="hotelDetails" name="hotels.details" required><br>
+        <label for="hotelName">Name:</label>
+        <input type="text" id="hotelName" name="hotels.name" required><br>
+        <label for="hotelAddress">Address:</label>
+        <input type="text" id="hotelAddress" name="hotels.address" required><br>
+        <label for="checkIn">Check-In Date:</label>
+        <input type="datetime-local" id="checkIn" name="hotels.checkIn" required><br>
+        <label for="checkOut">Check-Out Date:</label>
+        <input type="datetime-local" id="checkOut" name="hotels.checkOut" required><br>
+        <label for="bookingDetails">Booking Details:</label>
+        <input type="text" id="bookingDetails" name="hotels.bookingDetails" required><br>
+      </fieldset>
+      
+      <!-- Transfers -->
+      <label for="transfers">Transfers:</label>
+      <input type="text" id="transfers" name="transfers" required><br>
+      
+      <!-- Activities -->
+      <fieldset>
+        <legend>Activities</legend>
+        <div id="activitiesContainer">
+          <!-- Activity 1 -->
+          <div class="activity">
+            <label for="activityName1">Activity Name:</label>
+            <input type="text" id="activityName1" name="activities[0].name" required><br>
+            <label for="activityImg1">Activity Image URL:</label>
+            <input type="url" id="activityImg1" name="activities[0].img" required><br>
+            <label for="activityDescription1">Activity Description:</label>
+            <textarea id="activityDescription1" name="activities[0].description" required></textarea><br>
+          </div>
+          
+          <!-- Activity 2 -->
+          <div class="activity">
+            <label for="activityName2">Activity Name:</label>
+            <input type="text" id="activityName2" name="activities[1].name" required><br>
+            <label for="activityImg2">Activity Image URL:</label>
+            <input type="url" id="activityImg2" name="activities[1].img" required><br>
+            <label for="activityDescription2">Activity Description:</label>
+            <textarea id="activityDescription2" name="activities[1].description" required></textarea><br>
+          </div>
+          
+          <!-- Activity 3 -->
+          <div class="activity">
+            <label for="activityName3">Activity Name:</label>
+            <input type="text" id="activityName3" name="activities[2].name" required><br>
+            <label for="activityImg3">Activity Image URL:</label>
+            <input type="url" id="activityImg3" name="activities[2].img" required><br>
+            <label for="activityDescription3">Activity Description:</label>
+            <textarea id="activityDescription3" name="activities[2].description" required></textarea><br>
+          </div>
+        </div>
+      </fieldset>
+      
+      <!-- Itinerary -->
+      <fieldset>
+        <legend>Itinerary</legend>
+        <!-- Day 1 -->
+        <div class="itinerary">
+          <label for="day1">Day 1:</label>
+          <input type="number" id="day1" name="itinerary[0].day" required><br>
+          <label for="date1">Date:</label>
+          <input type="datetime-local" id="date1" name="itinerary[0].date" required><br>
+          <label for="hotel1">Hotel:</label>
+          <input type="text" id="hotel1" name="itinerary[0].hotel" required><br>
+          <label for="hotelStars1">Hotel Stars:</label>
+          <input type="text" id="hotelStars1" name="itinerary[0].hotelStars" required><br>
+          <label for="car1">Car:</label>
+          <input type="text" id="car1" name="itinerary[0].car" required><br>
+          <label for="sightseeing1">Sightseeing:</label>
+          <input type="text" id="sightseeing1" name="itinerary[0].sightseeing" required><br>
+        </div>
+        
+        <!-- Day 2 -->
+        <div class="itinerary">
+          <label for="day2">Day 2:</label>
+          <input type="number" id="day2" name="itinerary[1].day" required><br>
+          <label for="date2">Date:</label>
+          <input type="datetime-local" id="date2" name="itinerary[1].date" required><br>
+          <label for="hotel2">Hotel:</label>
+          <input type="text" id="hotel2" name="itinerary[1].hotel" required><br>
+          <label for="hotelStars2">Hotel Stars:</label>
+          <input type="text" id="hotelStars2" name="itinerary[1].hotelStars" required><br>
+          <label for="car2">Car:</label>
+          <input type="text" id="car2" name="itinerary[1].car" required><br>
+          <label for="sightseeing2">Sightseeing:</label>
+          <input type="text" id="sightseeing2" name="itinerary[1].sightseeing" required><br>
+        </div>
+        
+        <!-- Day 3 -->
+        <div class="itinerary">
+          <label for="day3">Day 3:</label>
+          <input type="number" id="day3" name="itinerary[2].day" required><br>
+          <label for="date3">Date:</label>
+          <input type="datetime-local" id="date3" name="itinerary[2].date" required><br>
+          <label for="hotel3">Hotel:</label>
+          <input type="text" id="hotel3" name="itinerary[2].hotel" required><br>
+          <label for="hotelStars3">Hotel Stars:</label>
+          <input type="text" id="hotelStars3" name="itinerary[2].hotelStars" required><br>
+          <label for="car3">Car:</label>
+          <input type="text" id="car3" name="itinerary[2].car" required><br>
+          <label for="sightseeing3">Sightseeing:</label>
+          <input type="text" id="sightseeing3" name="itinerary[2].sightseeing" required><br>
+        </div>
+      </fieldset>
+      
+      <!-- Meals -->
+      <label for="meals">Meals:</label>
+      <input type="text" id="meals" name="meals" required><br>
+      
+      <!-- Price -->
+      <label for="price">Price:</label>
+      <input type="text" id="price" name="price" required><br>
+      
+      <!-- Image URL -->
+      <label for="img">Image URL:</label>
+      <input type="url" id="img" name="img" required><br>
+      
+      <!-- Additional Image URLs -->
+      <label for="additionalImg">Additional Image URLs (comma-separated):</label>
+      <input type="text" id="additionalImg" name="additionalImg"><br>
+      
+      <!-- Submit Button -->
+      <button type="submit">Update Package</button>
+    </form>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="editpackage.js"></script>
+</body>
+</html>

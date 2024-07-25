@@ -70,10 +70,10 @@
           return response.json();
         })
         .then(data => {
-          console.log('Fetched data:', data); // Log the fetched data
+          console.log('Fetched data:', data); 
 
           const packagesContainer = document.getElementById('packagesContainer');
-          packagesContainer.innerHTML = ''; // Clear previous content
+          packagesContainer.innerHTML = ''; 
 
           if (Array.isArray(data) && data.length > 0) {
             data.forEach(pkg => {
@@ -96,7 +96,7 @@
                     <div class="d-flex justify-content-between">
                       ${
                         pkg.createdBy === userId
-                          ? `<a href="edit_package.html?id=${pkg._id}" class="btn">Edit</a>
+                          ? `<a href="editpackage.html?id=${pkg._id}" class="btn">Edit</a>
                              <a href="#" class="btn" onclick="deletePackage('${pkg._id}')">Delete</a>`
                           : `<a href="details.html?id=${pkg._id}" class="btn">View</a>
                              <a href="#" class="btn">Book</a>`

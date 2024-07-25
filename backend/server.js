@@ -18,7 +18,7 @@ app.use(cookieParser());
 // CORS options
 const corsOptions = {
   origin: 'http://127.0.0.1:8080', 
-  methods: ['GET', 'POST','DELETE'], 
+  methods: ['GET', 'POST','DELETE', 'PUT'], 
   credentials: true 
 };
 app.use(cors(corsOptions));
@@ -280,6 +280,24 @@ app.delete('/api/packages/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+
+
+
+app.put('/api/package/:id', async (req, res) => {
+  try {
+    const updatedPackage = await Package.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedPackage) {
+      return res.status(404).json({ message: 'Package not found' });
+    }
+    res.json(updatedPackage);
+  } catch (error) {
+    console.error('Error updating package:', error);
+    res.status(500).json({ message: 'Failed to update package' });
+  }
+});
+
 
 
 app.use((err, req, res, next) => {
